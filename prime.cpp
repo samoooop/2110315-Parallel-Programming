@@ -108,7 +108,7 @@ void FindPrimes(int start, int end)
     // start is always odd
     int range = end - start + 1; 
     int lPrimesFound = 0;
-    int nCore = 4;
+    int nCore = 10;
     int binSize = range / nCore;
     int c = 0;
     int k = 0;
@@ -119,14 +119,9 @@ void FindPrimes(int start, int end)
         // printf("%d\n",c*binSize+k);
         test_number[c*binSize+k] = i;
         c++;
-        if(c == nCore){
-            c = 0;
-            k++;
-        }
-        total_number++;
+        k += c / nCore;
+        c = c % nCore;
     }
-
-    printf("%d\n",total_number);
 
     #pragma omp parallel for reduction(+:gPrimesFound)
         for( int i = 0; i<range; i++ )
