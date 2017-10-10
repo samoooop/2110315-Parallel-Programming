@@ -51,6 +51,7 @@ static       int gProgress    = 0,
 long             globalPrimes[MAX_NUMBER+1];
 int              CLstart, CLend;
 
+long test_number[MAX_NUMBER+1];
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -108,19 +109,27 @@ void FindPrimes(int start, int end)
     int range = end - start + 1; 
     int lPrimesFound = 0;
     int nCore = 4;
-    int x;
-    
-    vector<int> test_number;
+    int binSize = range / nCore;
     int c = 0;
-    for(int i = start; i <= end; i += 2){
-        test_number.push_back(i);
+    int k = 0;
+    int total_number = 0;
+    
+    for( int i = start; i<=end; i+=2 )
+    {
+        // printf("%d\n",c*binSize+k);
+        test_number[c*binSize+k] = i;
+        c++;
+        if(c == nCore){
+            c = 0;
+            k++;
+        }
+        total_number++;
     }
-    cout << test_number.size();
-    random_shuffle(test_number.begin(),test_number.end());
-    printf("%d",test_number[0]);
 
-    #pragma omp parallel for private(x) reduction(+:gPrimesFound)
-        for( int i = 0; i< test_number.size(); i++ )
+    printf("%d\n",total_number);
+
+    #pragma omp parallel for reduction(+:gPrimesFound)
+        for( int i = 0; i<range; i++ )
         {
             // printf("%d\n",i);
             // x = test_number[i];
