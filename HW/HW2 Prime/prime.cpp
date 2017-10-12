@@ -107,28 +107,28 @@ void FindPrimes(int start, int end)
 {
     // start is always odd
     int range = end - start + 1; 
-    int lPrimesFound = 0;
-    int nCore = 10;
-    int binSize = range / nCore;
-    int c = 0;
-    int k = 0;
-    int total_number = 0;
+    // int lPrimesFound = 0;
+    // int nCore = 10;
+    // int binSize = range / nCore;
+    // int c = 0;
+    // int k = 0;
+    // int total_number = 0;
     
-    for( int i = start; i<=end; i+=2 )
-    {
-        // printf("%d\n",c*binSize+k);
-        test_number[c*binSize+k] = i;
-        c++;
-        k += c / nCore;
-        c = c % nCore;
-    }
+    // for( int i = start; i<=end; i+=2 )
+    // {
+    //     // printf("%d\n",c*binSize+k);
+    //     test_number[c*binSize+k] = i;
+    //     c++;
+    //     k += c / nCore;
+    //     c = c % nCore;
+    // }
 
-    #pragma omp parallel for reduction(+:gPrimesFound)
-        for( int i = 0; i<range; i++ )
+    #pragma omp parallel for reduction(+:gPrimesFound) schedule(dynamic)
+        for( int i = start; i< end; i+=2 )
         {
             // printf("%d\n",i);
             // x = test_number[i];
-            if( TestForPrime(test_number[i]) ) {
+            if( TestForPrime(i) ) {
                 gPrimesFound++;
                 // globalPrimes[i] = 1;
             }
